@@ -1190,14 +1190,15 @@ select.form-input { cursor: pointer; }
 </div>
 
 <!------ EXPORT & IMPORT ------>
-<div class="list-card" style="margin: 16px; padding: 16px;">
-  <h3 style="font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">Backup & Sync</h3>
-  <div style="display: flex; gap: 10px;">
-    <button class="btn btn-ghost" onclick="exportData()" style="flex: 1; padding: 10px; font-size: 13px;">
-      📤 Export Backup
+<!-- Place this inside your existing Settings/Gear dropdown container -->
+<div class="settings-group" style="padding: 12px; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 8px;">
+  <div style="font-size: 11px; color: var(--tx2); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Data Management</div>
+  <div style="display: flex; flex-direction: column; gap: 8px;">
+    <button onclick="exportData()" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); color: var(--tx); cursor: pointer; text-align: left; font-size: 13px;">
+      📤 Export Backup (.json)
     </button>
-    <button class="btn btn-primary" onclick="triggerImport()" style="flex: 1; padding: 10px; font-size: 13px;">
-      📥 Import Backup
+    <button onclick="triggerImport()" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); color: var(--tx); cursor: pointer; text-align: left; font-size: 13px;">
+      📥 Import Backup (.json)
     </button>
   </div>
   <input type="file" id="importFileInput" accept=".json" onchange="importData(event)" style="display: none;" />
@@ -1737,13 +1738,11 @@ renderAll();
 renderCalendar();
 
 // ══════════ EXPORT & IMPORT ══════════
-  // Place these functions inside your <script> tag at the bottom
 function exportData() {
   try {
     const backupData = {
       version: "1.0",
       timestamp: new Date().toISOString(),
-      // Matches the exact state keys used in ClearPath
       income: JSON.parse(localStorage.getItem('clearpath_income')) || [],
       debts: JSON.parse(localStorage.getItem('clearpath_debts')) || [],
       accounts: JSON.parse(localStorage.getItem('clearpath_accounts')) || [],
@@ -1777,7 +1776,7 @@ function importData(event) {
     try {
       const parsedData = JSON.parse(e.target.result);
       
-      if (!confirm("Are you sure you want to import this file? It will overwrite your current entries.")) {
+      if (!confirm("Are you sure you want to import this file? It will completely replace your current app entries.")) {
         event.target.value = ''; 
         return;
       }
