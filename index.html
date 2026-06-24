@@ -612,7 +612,7 @@ select.form-input { cursor: pointer; }
 
   <!-- ═══ TOP BAR ═══ -->
   <div class="topbar">
-    <button class="topbar-icon" onclick="openPanel()" title="Settings">⚙️</button>
+    <button class="topbar-icon" onclick="openModal('settingsModal')" title="Settings">⚙️</button>
     <div class="topbar-date" id="topbarDate">ClearPath</div>
     <button class="topbar-icon" title="Notifications">🔔</button>
   </div>
@@ -1016,6 +1016,7 @@ select.form-input { cursor: pointer; }
     <div class="panel-nav-item" onclick="openModal('accountModal');closePanel()"><span class="pni">🏦</span> Add Account</div>
     <div class="panel-nav-item" onclick="openModal('billModal');closePanel()"><span class="pni">📄</span> Add Bill</div>
     <div class="panel-nav-item" onclick="openModal('subModal');closePanel()"><span class="pni">🔄</span> Add Subscription</div>
+    <div class="panel-nav-item" onclick="openModal('export');closePanel()"><span class="pni">🔄</span> Add Subscription</div>
   </div>
   <div style="padding:16px 16px;border-top:1px solid var(--border)">
     <div style="background:var(--bg3);border-radius:12px;padding:14px 16px">
@@ -1190,20 +1191,29 @@ select.form-input { cursor: pointer; }
 </div>
 
 <!------ EXPORT & IMPORT ------>
-<!-- Place this inside your existing Settings/Gear dropdown container -->
-<div class="settings-group" style="padding: 12px; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 8px;">
-  <div style="font-size: 11px; color: var(--tx2); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Data Management</div>
-  <div style="display: flex; flex-direction: column; gap: 8px;">
-    <button onclick="exportData()" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); color: var(--tx); cursor: pointer; text-align: left; font-size: 13px;">
-      📤 Export Backup (.json)
-    </button>
-    <button onclick="triggerImport()" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); color: var(--tx); cursor: pointer; text-align: left; font-size: 13px;">
-      📥 Import Backup (.json)
-    </button>
+<!-- Settings / Data Management Modal -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title-bar">
+      <div class="modal-title">App Settings</div>
+      <button class="modal-close-btn" onclick="closeModal('settingsModal')">✕</button>
+    </div>
+    
+    <div class="modal-body" style="padding: 16px;">
+      <h3 style="font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">Data Backup & Sync</h3>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button class="btn btn-ghost" onclick="exportData()" style="width: 100%; text-align: left; padding: 12px; display: flex; align-items: center; gap: 8px;">
+          <span>📤</span> Export Backup (.json)
+        </button>
+        <button class="btn btn-ghost" onclick="triggerImport()" style="width: 100%; text-align: left; padding: 12px; display: flex; align-items: center; gap: 8px;">
+          <span>📥</span> Import Backup (.json)
+        </button>
+      </div>
+      <input type="file" id="importFileInput" accept=".json" onchange="importData(event)" style="display: none;" />
+    </div>
   </div>
-  <input type="file" id="importFileInput" accept=".json" onchange="importData(event)" style="display: none;" />
 </div>
-
 <script>
 // ══════════ STATE ══════════
 const state = { debts:[], accounts:[], incomes:[], bills:[], subscriptions:[] };
