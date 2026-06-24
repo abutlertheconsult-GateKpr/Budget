@@ -1189,6 +1189,20 @@ select.form-input { cursor: pointer; }
   </div>
 </div>
 
+<!------ EXPORT & IMPORT ------>
+<div class="list-card" style="margin: 16px; padding: 16px;">
+  <h3 style="font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">Backup & Sync</h3>
+  <div style="display: flex; gap: 10px;">
+    <button class="btn btn-ghost" onclick="exportData()" style="flex: 1; padding: 10px; font-size: 13px;">
+      📤 Export Backup
+    </button>
+    <button class="btn btn-primary" onclick="triggerImport()" style="flex: 1; padding: 10px; font-size: 13px;">
+      📥 Import Backup
+    </button>
+  </div>
+  <input type="file" id="importFileInput" accept=".json" onchange="importData(event)" style="display: none;" />
+</div>
+
 <script>
 // ══════════ STATE ══════════
 const state = { debts:[], accounts:[], incomes:[], bills:[], subscriptions:[] };
@@ -1721,6 +1735,68 @@ function removeSub(i){state.subscriptions.splice(i,1);save();renderAll();renderR
 // ══════════ INIT ══════════
 renderAll();
 renderCalendar();
+
+// ══════════ EXPORT & IMPORT ══════════
+  // Place these functions inside your <script> tag at the bottom
+function exportData() {
+  try {
+    const backupData = {
+      version: "1.0",
+      timestamp: new Date().toISOString(),
+      // Matches the exact state keys used in ClearPath
+      income: JSON.parse(localStorage.getItem('clearpath_income')) || [],
+      debts: JSON.parse(localStorage.getItem('clearpath_debts')) || [],
+      accounts: JSON.parse(localStorage.getItem('clearpath_accounts')) || [],
+      bills: JSON.parse(localStorage.getItem('clearpath_bills')) || [],
+      subscriptions: JSON.parse(localStorage.getItem('clearpath_subscriptions')) || []
+    };
+
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
+    const downloadAnchor = document.createElement('a');
+    
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `clearpath_backup_${new Date().toISOString().split('T')[0]}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+  } catch (err) {
+    alert("Export failed: " + err.message);
+  }
+}
+
+function triggerImport() {
+  document.getElementById('importFileInput').click();
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const parsedData = JSON.parse(e.target.result);
+      
+      if (!confirm("Are you sure you want to import this file? It will overwrite your current entries.")) {
+        event.target.value = ''; 
+        return;
+      }
+
+      if (parsedData.income) localStorage.setItem('clearpath_income', JSON.stringify(parsedData.income));
+      if (parsedData.debts) localStorage.setItem('clearpath_debts', JSON.stringify(parsedData.debts));
+      if (parsedData.accounts) localStorage.setItem('clearpath_accounts', JSON.stringify(parsedData.accounts));
+      if (parsedData.bills) localStorage.setItem('clearpath_bills', JSON.stringify(parsedData.bills));
+      if (parsedData.subscriptions) localStorage.setItem('clearpath_subscriptions', JSON.stringify(parsedData.subscriptions));
+
+      alert("Data imported successfully!");
+      window.location.reload(); 
+    } catch (err) {
+      alert("Import failed. Invalid file format. " + err.message);
+      event.target.value = '';
+    }
+  };
+  reader.readAsText(file);
+}
 </script>
 </body>
 </html>
