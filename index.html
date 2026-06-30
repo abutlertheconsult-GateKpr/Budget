@@ -1481,6 +1481,19 @@ const SUPABASE_URL = 'https://ixwmndzgugngkzlvywpv.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4d21uZHpndWduZ2t6bHZ5d3B2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MzMxODQsImV4cCI6MjA5ODAwOTE4NH0.MBul_Qnv-36oOtWVEM55E4kSccyQO19AHFZW2NhizeE';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// 2. Your login function
+async function signInWithGoogle() {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google', 
+    options: {
+      // This forces the mobile device to redirect to your exact GitHub Pages URL
+      redirectTo: 'https://abutlertheconsult-gatekpr.github.io/Budget/' 
+    }
+  })
+  
+  if (error) console.error('Login error:', error.message)
+}
+
 // ══════════ STATE ══════════
 const state = { debts:[], accounts:[], incomes:[], bills:[], subscriptions:[], goals:[] };
 try { const s = localStorage.getItem('clearpath_v2'); if(s) { const p=JSON.parse(s); Object.assign(state,p); if(!state.goals)state.goals=[]; } } catch(e){}
