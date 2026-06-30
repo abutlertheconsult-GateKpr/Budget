@@ -27,12 +27,12 @@
     {
       "name": "Dashboard",
       "short_name": "Home",
-      "url": "./debt-payoff.html"
+      "url": "./index.html"
     },
     {
       "name": "Payoff Planner",
       "short_name": "Payoff",
-      "url": "./debt-payoff.html"
+      "url": "./index.html"
     }
   ]
 }
