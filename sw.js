@@ -1,7 +1,7 @@
 const CACHE = 'clearpath-v1';
 const ASSETS = [
-  './debt-payoff.html',
-  './manifest.json'
+  '/Budget/debt-payoff.html',
+  '/Budget/manifest.json'
 ];
 
 self.addEventListener('install', e => {
