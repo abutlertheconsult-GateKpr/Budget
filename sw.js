@@ -1,6 +1,6 @@
-const CACHE = 'clearpath-v1';
+const CACHE = 'clearpath-v5';
 const ASSETS = [
-  '/Budget/debt-payoff.html',
+  '/Budget/index.html',
   '/Budget/manifest.json'
 ];
 
